@@ -3,14 +3,18 @@ package il.ac.technion.cs.sd.book.test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import il.ac.technion.cs.sd.book.app.BookScoreInitializer;
+import il.ac.technion.cs.sd.book.app.BookScoreInitializerImpl;
 import il.ac.technion.cs.sd.book.app.BookScoreReader;
 import il.ac.technion.cs.sd.book.ext.LineStorageModule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.OptionalDouble;
 import java.util.Scanner;
@@ -21,11 +25,11 @@ public class ExampleTest {
 
   @Rule public Timeout globalTimeout = Timeout.seconds(30);
 
-  private static BookScoreReader setupAndGetReader(String fileName) throws FileNotFoundException {
+  private static BookScoreReader setupAndGetReader(String fileName) throws IOException, SAXException, ParserConfigurationException {
     String fileContents =
         new Scanner(new File(ExampleTest.class.getResource(fileName).getFile())).useDelimiter("\\Z").next();
     Injector injector = Guice.createInjector(new BookScoreModule(), new LineStorageModule());
-    injector.getInstance(BookScoreInitializer.class).setup(fileContents);
+    injector.getInstance(BookScoreInitializerImpl.class).setup(fileContents);
     return injector.getInstance(BookScoreReader.class);
   }
 
