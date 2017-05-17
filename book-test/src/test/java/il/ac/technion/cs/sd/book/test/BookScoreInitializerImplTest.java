@@ -16,6 +16,8 @@ public class BookScoreInitializerImplTest {
         String fileContents =
                 new Scanner(new File(BookScoreInitializerImplTest.class.getResource("small.xml").getFile())).useDelimiter("\\Z").next();
         imp.setup(fileContents);
+
+
     }
 
 }

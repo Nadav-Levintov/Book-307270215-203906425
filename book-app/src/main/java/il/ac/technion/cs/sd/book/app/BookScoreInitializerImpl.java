@@ -1,5 +1,7 @@
 package il.ac.technion.cs.sd.book.app;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -21,9 +23,38 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         DocumentBuilder db=dbf.newDocumentBuilder();
         InputSource is = new InputSource((new StringReader(xmlData)));
         Document doc = db.parse(is);
-        System.out.format("The node type:  element: %s uri: %s",  doc.getDocumentElement().toString(),doc.getDocumentURI());
-        Node docson = doc.getChildNodes().item(1);
-        System.out.format("The node type: %s element: %s", docson.getNodeType(), docson.getTextContent());
+        doc.getDocumentElement().normalize();
+        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        NodeList nListReviewers = doc.getElementsByTagName("Reviewer");
+        System.out.println("----------------------------");
+
+        for (int temp = 0; temp < nListReviewers.getLength(); temp++) {
+
+            Node nNodeReviewers = nListReviewers.item(temp);
+            System.out.println("\nCurrent Element :" + nNodeReviewers.getNodeName());
+
+            if (nNodeReviewers.getNodeType() == Node.ELEMENT_NODE) {
+
+                Element eElementeviewer = (Element) nNodeReviewers;
+                System.out.println("Reviewer id : " + ((Element) nNodeReviewers).getAttribute("Id"));
+
+                NodeList nListReviews = ((Element) nNodeReviewers).getElementsByTagName("Review");
+
+                for (int temp2 = 0; temp2 < nListReviews.getLength(); temp2++){
+
+                    Node nNodeReview = nListReviews.item(temp2);
+                    System.out.println("\n  Current Element :" + nNodeReview.getNodeName());
+                    if (nNodeReview.getNodeType() == Node.ELEMENT_NODE){
+                        Element eElementReview = (Element) nNodeReview;
+                        System.out.println("        Id: " + eElementReview.getElementsByTagName("Id").item(0).getTextContent());
+                        System.out.println("        Score: " + eElementReview.getElementsByTagName("Score").item(0).getTextContent());
+
+                    }
+                }
+
+            }
+        }
+
 
     }
 }
