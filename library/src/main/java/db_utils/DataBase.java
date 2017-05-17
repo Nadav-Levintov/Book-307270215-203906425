@@ -2,175 +2,182 @@ package db_utils;
 
 
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import com.google.inject.Inject;
+import il.ac.technion.cs.sd.book.ext.LineStorage;
+import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
+import java.util.*;
 
 
 public class DataBase {
 
 
-    protected Integer num_of_columns;
+    private final Integer num_of_columns;
+    private final Integer num_of_keys;
+    private final List<String> names_of_columns;
+    private final LineStorageFactory lineStorageFactory;
 
+    @Inject
+    public DataBase(Integer num_of_keys, List<String> names_of_columns,LineStorageFactory lineStorageFactory) {
+        this.num_of_keys=num_of_keys;
+        this.names_of_columns = names_of_columns;
+        this.num_of_columns=names_of_columns.size();
+        this.lineStorageFactory = lineStorageFactory;
+    }
+
+    public void build_db(String csv_data){
+        List<Map<String,String>> DB= new ArrayList<>();
+        for (int i=0;i<num_of_keys;i++)
+        {
+            DB.add(i,new TreeMap<String,String>());
+        }
+
+        String[] lines = csv_data.split("\n");
+        for(String line : lines){
+            String[] curr_line = line.split(",");
+            //TODO: make generic with permutations
+            String key_1=curr_line[0]+","+curr_line[1];
+            String key_2=curr_line[1]+","+curr_line[0];
+            String value = new String();
+            for(int i=num_of_keys;i<num_of_columns-1;i++)
+            {
+                value+=curr_line[i]+",";
+            }
+            value+=curr_line[num_of_columns-1];
+
+            DB.get(0).put(key_1,value);
+            DB.get(1).put(key_2,value);
+
+        }
+
+        for(int i=0; i<num_of_keys;i++)
+        {
+            LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(i));
+            Map<String,String> curr_table = DB.get(i);
+            for(Map.Entry<String,String> entry : curr_table.entrySet())
+            {
+                String output = entry.getKey()+","+entry.getValue();
+                lineStorage.appendLine(output);
+            }
+        }
+
+    }
+
+
+    public Optional<String> get_val_from_column_by_name(List<String> keys, String column) throws InterruptedException {
+        LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(0));
+        Integer low=0,high;
+        String curr_line;
+        high = lineStorage.numberOfLines()-1;
+        String key=new String();
+        for (String str: keys
+             ) {
+            key+=str+",";
+        }
+
+        while (low <= high) {
+
+            Integer mid = low + (high - low) / 2;
+            curr_line = lineStorage.read(mid);
+
+            String[] values = curr_line.split(",");
+            //TODO: do dynamically
+            String curr_key=values[0]+","+values[1]+",";
+            Integer compare=key.compareTo(curr_key);
+            if      (compare < 0) high = mid - 1;
+            else if (compare > 0) low = mid + 1;
+            else return Optional.of(values[names_of_columns.indexOf(column)]);
+        }
+        return Optional.empty();
+    }
+
+    public List<String> get_lines_for_key(String key,Integer key_id) throws InterruptedException {
+        List<String> results = new ArrayList<>();
+
+        if(!names_of_columns.contains(key))
+        {
+            return results;
+        }
+
+        LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(key_id));
+        Integer low=0,high;
+        String curr_line;
+        high = lineStorage.numberOfLines()-1;
+
+
+        Integer index=0,compare=0;
+        String[] values;
+
+        while (low <= high) {
+
+            Integer mid = low + (high - low) / 2;
+            curr_line = lineStorage.read(mid);
+
+            values = curr_line.split(",");
+            compare=key.compareTo(values[0]);
+            if      (compare < 0) high = mid - 1;
+            else if (compare > 0) low = mid + 1;
+            else index=mid;
+        }
+
+        if(low > high) {
+            return results;
+        }
+
+        do {
+            curr_line = lineStorage.read(index);
+            values = curr_line.split(",");
+            compare = key.compareTo(values[0]);
+            index--;
+        }while(compare == 0 && index >= 0);
+
+        index++;
+        do {
+            curr_line = lineStorage.read(index);
+            values = curr_line.split(",");
+            compare = key.compareTo(values[0]);
+            index++;
+            if (compare == 0) {
+                String output = curr_line.substring(curr_line.indexOf(',') + 1);
+                results.add(output);
+            }
+        }
+        while(compare == 0 && index < lineStorage.numberOfLines());
+
+        return results;
+    }
+
+    public Optional<String> get_val_from_column_by_colum_number(List<String> keys, Integer column) throws InterruptedException {
+        if (column< 0  || column > num_of_columns)
+        {
+            return Optional.empty();
+        }
+        return get_val_from_column_by_name(keys,names_of_columns.get(column));
+    }
+
+    public Integer getNum_of_columns() {
+        return num_of_columns;
+    }
+
+    public Optional<String> get_line_by_num_and_key(Integer num, String key) throws InterruptedException, IllegalArgumentException{
+        if(!names_of_columns.contains(key))
+        {
+            return Optional.empty();
+        }
+
+        LineStorage lineStorage = lineStorageFactory.open(key);
+
+        if(num>lineStorage.numberOfLines()) || num<0)
+        {
+            throw new IllegalArgumentException(Integer.toString(num));
+        }
+        return Optional.of(lineStorage.read(num));
+    }
     public List<String> getNames_of_columns() {
         return names_of_columns;
     }
 
-    protected List<String> names_of_columns;
-    protected Map<String,String> DB = new TreeMap();
-    protected StorageInterface storage_implament;
-    public DataBase(List<String> names_of_columns){
-        this.names_of_columns = names_of_columns;
-        this.num_of_columns=names_of_columns.size();
-        this.storage_implament = new DefaultStorageImplament();
+    public Integer getNum_of_keys() {
+        return num_of_keys;
     }
-
-    public DataBase(List<String> names_of_columns,StorageInterface storage_implemant) {
-
-        this.names_of_columns = names_of_columns;
-        this.num_of_columns=names_of_columns.size();
-        this.storage_implament = storage_implemant;
-    }
-
-    public void build_db(String csv_data){
-
-        String[] lines = csv_data.split("\n");
-        for(String line : lines){
-            String key = line.substring(0,line.indexOf(','));
-            String value = line.substring(line.indexOf(',')+1);
-            DB.put(key,value);
-        }
-
-        for(Map.Entry<String,String> entry : DB.entrySet())
-        {
-            String output = entry.getKey()+ ',' + entry.getValue();
-            storage_implament.appendLine(output);
-        }
-    }
-
-    public Integer size() throws InterruptedException {
-        return storage_implament.numberOfLines();
-    }
-
-    public Optional<String> get_val_from_column_by_name(String key, String column) throws InterruptedException {
-        Integer low=0,high;
-        String curr_line;
-        high = storage_implament.numberOfLines()-1;
-
-        while (low <= high) {
-
-            Integer mid = low + (high - low) / 2;
-            curr_line = storage_implament.read(mid);
-
-            String[] values = curr_line.split(",");
-            Integer compare=key.compareTo(values[0]);
-            if      (compare < 0) high = mid - 1;
-            else if (compare > 0) low = mid + 1;
-            else return Optional.of(values[names_of_columns.indexOf(column)]);
-        }
-        return Optional.empty();
-    }
-
-    public Optional<String> get_val_from_column_by_colum_number(String key, Integer column) throws InterruptedException {
-        Integer low=0,high;
-        String curr_line;
-        high = storage_implament.numberOfLines()-1;
-
-        while (low <= high) {
-
-            Integer mid = low + (high - low) / 2;
-            curr_line = storage_implament.read(mid);
-
-            String[] values = curr_line.split(",");
-            Integer compare=key.compareTo(values[0]);
-            if      (compare < 0) high = mid - 1;
-            else if (compare > 0) low = mid + 1;
-            else return Optional.of(values[column]);
-        }
-        return Optional.empty();
-    }
-
-    public Integer getNum_of_columns() {
-        return num_of_columns;
-    }
-
-    public Optional<String> get_line_by_num(Integer num) throws InterruptedException, IllegalArgumentException{
-        if(num>=this.size() || num<0)
-        {
-            throw new IllegalArgumentException(Integer.toString(num));
-        }
-        return Optional.of(storage_implament.read(num));
-    }
-    /*
-    public DataBase(Integer num_of_columns,List<?> names_of_columns) {
-
-        this.num_of_columns = num_of_columns;
-        this.names_of_columns = names_of_columns;
-        this.storage_implament = new DefaultStorageImplament();
-    }
-    public DataBase(Integer num_of_columns,List<?> names_of_columns,StorageInterface storage_implament) {
-
-        this.num_of_columns = num_of_columns;
-        this.names_of_columns = names_of_columns;
-        this.storage_implament = storage_implament;
-    }
-
-
-    public Integer getNum_of_columns() {
-        return num_of_columns;
-    }
-
-
-    public void insert_line(String key,List<String> values)
-    {
-        if(values.size() != num_of_columns-1)
-        {
-            throw new IllegalArgumentException();
-        }
-
-        DB.put(key,values);
-    }
-
-    public void write_to_disk()
-    {
-        for(Map.Entry<String,List<String>> entry : DB.entrySet())
-        {
-            String key = entry.getKey();
-            List<String> val = entry.getValue();
-
-            String output = key;
-            for (String str : val ) {
-                output+="," + str;
-            }
-
-            storage_implament.appendLine(output);
-        }
-    }
-
-    public Optional<String> get_val_from_column(String key, String column) throws InterruptedException {
-        Integer low=0,high;
-        String curr_line;
-        high = storage_implament.numberOfLines()-1;
-
-        while (low <= high) {
-
-            Integer mid = low + (high - low) / 2;
-            curr_line = storage_implament.read(mid);
-
-            String[] values = curr_line.split(",");
-            Integer compare=key.compareTo(values[0]);
-            if      (compare < 0) high = mid - 1;
-            else if (compare > 0) low = mid + 1;
-            else return Optional.of(values[names_of_columns.indexOf(column)]);
-        }
-        return Optional.empty();
-    }
-
-    public Integer size()
-    {
-        return DB.size();
-    }
-*/
 }

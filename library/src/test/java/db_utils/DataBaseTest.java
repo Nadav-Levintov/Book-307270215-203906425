@@ -43,7 +43,7 @@ public class DataBaseTest {
                 "Benny,27\n" +
                 "Zed,65\n";
 
-        DB.build_db(csvData);
+        DB.write_db(csvData);
 
         Mockito.when(si.numberOfLines()).thenReturn(file.size());
         Mockito.when(si.read(Mockito.anyInt())).thenAnswer(i -> file.get(i.getArgument(0)));
@@ -85,7 +85,7 @@ public class DataBaseTest {
                 "Benny,27\n" +
                 "Zed,65\n";
 
-        DB.build_db(csvData);
+        DB.write_db(csvData);
         Mockito.when(si.numberOfLines()).thenReturn(file.size());
         assertEquals(Optional.of(3),Optional.of(DB.size()));
     }
@@ -117,7 +117,7 @@ public class DataBaseTest {
                 "Benny,27\n" +
                 "Zed,65\n";
 
-        DB.build_db(csvData);
+        DB.write_db(csvData);
         Mockito.when(si.numberOfLines()).thenReturn(file.size());
         assertEquals(Optional.of("25"),DB.get_val_from_column_by_name("Nadav",col_names.get(1)));
         assertEquals(Optional.of("Nadav"),DB.get_val_from_column_by_name("Nadav",col_names.get(0)));
@@ -152,7 +152,7 @@ public class DataBaseTest {
                 "Benny,27\n" +
                 "Zed,65\n";
 
-        DB.build_db(csvData);
+        DB.write_db(csvData);
         Mockito.when(si.numberOfLines()).thenReturn(file.size());
         assertEquals(Optional.of("25"),DB.get_val_from_column_by_colum_number("Nadav",1));
         assertEquals(Optional.of("Nadav"),DB.get_val_from_column_by_colum_number("Nadav",0));
@@ -164,7 +164,7 @@ public class DataBaseTest {
 
     /*
     @Test
-    public void getNum_of_columns() throws Exception {
+    public void getNum_of_values() throws Exception {
 
         List<String> col_names = new ArrayList<>();
         col_names.add("Name");
@@ -172,7 +172,7 @@ public class DataBaseTest {
 
         DataBase DB = new DataBase(col_names);
 
-        assertEquals(col_names.size(),DB.getNum_of_columns().intValue());
+        assertEquals(col_names.size(),DB.getNum_of_values().intValue());
     }
 */
 
