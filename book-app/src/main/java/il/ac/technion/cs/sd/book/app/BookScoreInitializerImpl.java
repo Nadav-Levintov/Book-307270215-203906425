@@ -1,5 +1,10 @@
 package il.ac.technion.cs.sd.book.app;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import db_utils.DataBase;
+import db_utils.DataBaseFactory;
+import il.ac.technion.cs.sd.book.ext.LineStorageModule;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -10,6 +15,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -49,6 +57,20 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
 
             }
         }
-        System.out.println(csv_file);
+        Injector injector = Guice.createInjector(new LineStorageModule());
+        DataBaseFactory bdf = injector.getInstance(DataBaseFactory.class);
+        Integer num_of_keys=2;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+
+
+
+        DataBase DB = bdf.setNames_of_columns(names_of_columns)
+                .setNum_of_keys(num_of_keys)
+                .build();
+
+        DB.build_db(csv_file);
     }
 }
