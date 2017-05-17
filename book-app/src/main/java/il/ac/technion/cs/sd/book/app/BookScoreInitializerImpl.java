@@ -24,37 +24,31 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         InputSource is = new InputSource((new StringReader(xmlData)));
         Document doc = db.parse(is);
         doc.getDocumentElement().normalize();
-        System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        String csv_file = new String();
         NodeList nListReviewers = doc.getElementsByTagName("Reviewer");
-        System.out.println("----------------------------");
-
-        for (int temp = 0; temp < nListReviewers.getLength(); temp++) {
-
+        for (int temp = 0; temp < nListReviewers.getLength(); temp++)
+        {
             Node nNodeReviewers = nListReviewers.item(temp);
-            System.out.println("\nCurrent Element :" + nNodeReviewers.getNodeName());
-
-            if (nNodeReviewers.getNodeType() == Node.ELEMENT_NODE) {
-
+            String csv_key = new String();
+            if (nNodeReviewers.getNodeType() == Node.ELEMENT_NODE)
+            {
                 Element eElementeviewer = (Element) nNodeReviewers;
-                System.out.println("Reviewer id : " + ((Element) nNodeReviewers).getAttribute("Id"));
-
-                NodeList nListReviews = ((Element) nNodeReviewers).getElementsByTagName("Review");
-
-                for (int temp2 = 0; temp2 < nListReviews.getLength(); temp2++){
-
+                csv_key += (eElementeviewer).getAttribute("Id") + ",";
+                NodeList nListReviews = (eElementeviewer).getElementsByTagName("Review");
+                for (int temp2 = 0; temp2 < nListReviews.getLength(); temp2++)
+                {
+                    String csv_value = new String();
                     Node nNodeReview = nListReviews.item(temp2);
-                    System.out.println("\n  Current Element :" + nNodeReview.getNodeName());
                     if (nNodeReview.getNodeType() == Node.ELEMENT_NODE){
                         Element eElementReview = (Element) nNodeReview;
-                        System.out.println("        Id: " + eElementReview.getElementsByTagName("Id").item(0).getTextContent());
-                        System.out.println("        Score: " + eElementReview.getElementsByTagName("Score").item(0).getTextContent());
-
+                        csv_value += eElementReview.getElementsByTagName("Id").item(0).getTextContent() + ",";
+                        csv_value += eElementReview.getElementsByTagName("Score").item(0).getTextContent() + "\n";
+                        csv_file += csv_key + csv_value;
                     }
                 }
 
             }
         }
-
-
+        System.out.println(csv_file);
     }
 }
