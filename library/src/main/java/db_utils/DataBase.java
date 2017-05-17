@@ -17,7 +17,6 @@ public class DataBase {
     private final List<String> names_of_columns;
     private final LineStorageFactory lineStorageFactory;
 
-    @Inject
     public DataBase(Integer num_of_keys, List<String> names_of_columns,LineStorageFactory lineStorageFactory) {
         this.num_of_keys=num_of_keys;
         this.names_of_columns = names_of_columns;
@@ -167,7 +166,7 @@ public class DataBase {
 
         LineStorage lineStorage = lineStorageFactory.open(key);
 
-        if(num>lineStorage.numberOfLines()) || num<0)
+        if(num>lineStorage.numberOfLines() || num<0)
         {
             throw new IllegalArgumentException(Integer.toString(num));
         }
