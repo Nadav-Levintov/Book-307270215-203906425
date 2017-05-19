@@ -2,8 +2,6 @@ package db_utils;
 
 
 
-import com.google.inject.Inject;
-import com.sun.deploy.util.StringUtils;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
@@ -15,11 +13,11 @@ public class DataBaseImpl implements DataBase {
 
     private final Integer num_of_columns;
     private final Integer num_of_keys;
-    private final ArrayList<String> names_of_columns;
+    private final List<String> names_of_columns;
     private final LineStorageFactory lineStorageFactory;
 
 
-    public DataBaseImpl(Integer num_of_keys, ArrayList<String> names_of_columns, LineStorageFactory lineStorageFactory) {
+    public DataBaseImpl(Integer num_of_keys, List<String> names_of_columns, LineStorageFactory lineStorageFactory) {
         this.num_of_keys=num_of_keys;
         this.names_of_columns = names_of_columns;
         this.num_of_columns=names_of_columns.size();
@@ -225,7 +223,7 @@ public class DataBaseImpl implements DataBase {
         return results;
     }
 
-    public Optional<String> get_val_from_column_by_colum_number(List<String> keys, Integer column) {
+    public Optional<String> get_val_from_column_by_column_number(List<String> keys, Integer column) {
         if (column< 0  || column > num_of_columns)
         {
             return Optional.empty();
