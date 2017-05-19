@@ -18,6 +18,7 @@ public class BookScoreInitializerImplTest {
     public void setup() throws Exception {
         Injector injector= Guice.createInjector(new DataBaseModule(),new LineStorageModule());
         BookScoreInitializerImpl imp= injector.getInstance(BookScoreInitializerImpl.class);
+
         String fileContents =
                 new Scanner(new File(BookScoreInitializerImplTest.class.getResource("small.xml").getFile())).useDelimiter("\\Z").next();
         imp.setup(fileContents);
