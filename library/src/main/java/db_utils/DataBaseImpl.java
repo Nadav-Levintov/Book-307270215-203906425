@@ -105,10 +105,15 @@ public class DataBaseImpl implements DataBase {
             // lineStorage.appendLine(output);  //TODO: this spouse to be uncomment
         }
     }
-
-    //TODO: change name
+    
     public Optional<String> get_val_from_column_by_name(List<String> keys, String column) {
-        LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(0));
+        String fileName = new String(names_of_columns.get(0));
+        for(int i = 1; i< (this.getNum_of_keys()-1); i++)
+        {
+            fileName += "_" + names_of_columns.get(i);
+        }
+        LineStorage lineStorage = lineStorageFactory.open(fileName);
+
         Integer low=0,high;
         String curr_line;
         try {
@@ -117,8 +122,8 @@ public class DataBaseImpl implements DataBase {
             throw new RuntimeException();
         }
         String key=new String();
-        for (String str: keys
-             ) {
+        for (String str: keys)
+        {
             key+=str+",";
         }
 
@@ -132,8 +137,13 @@ public class DataBaseImpl implements DataBase {
             }
 
             String[] values = curr_line.split(",");
-            //TODO: do dynamically
-            String curr_key=values[0]+","+values[1]+",";
+            String curr_key= new String();
+            for(int i = 0; i< this.getNum_of_keys(); i++)
+            {
+                curr_key += values[i] + ",";
+            }
+
+
             Integer compare=key.compareTo(curr_key);
             if      (compare < 0) high = mid - 1;
             else if (compare > 0) low = mid + 1;
@@ -142,7 +152,7 @@ public class DataBaseImpl implements DataBase {
         return Optional.empty();
     }
 
-    //TODO: change name...
+    //TODO: not working
     public List<String> get_lines_for_key(String key,Integer key_id) {
         List<String> results = new ArrayList<>();
 
@@ -219,7 +229,6 @@ public class DataBaseImpl implements DataBase {
         return results;
     }
 
-    //TODO: Don't understand  how it's spouse to work?
     public Optional<String> get_val_from_column_by_colum_number(List<String> keys, Integer column) {
         if (column< 0  || column > num_of_columns)
         {
@@ -232,7 +241,6 @@ public class DataBaseImpl implements DataBase {
         return num_of_columns;
     }
 
-    //TODO: No good for more than two keys
     public Optional<String> get_line_by_num_and_key(Integer num, String key) throws IllegalArgumentException{
         if(!names_of_columns.contains(key))
         {
@@ -255,6 +263,7 @@ public class DataBaseImpl implements DataBase {
             throw new RuntimeException();
         }
     }
+
     public List<String> getNames_of_columns() {
         return names_of_columns;
     }
