@@ -1,4 +1,4 @@
-package il.ac.technion.cs.sd.book.test;
+package db_utils;
 
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 

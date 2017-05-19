@@ -1,6 +1,7 @@
-package il.ac.technion.cs.sd.book.test;
+package db_utils;
 
 import com.google.inject.AbstractModule;
+import db_utils.MockLineStorageFactory;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
 /**

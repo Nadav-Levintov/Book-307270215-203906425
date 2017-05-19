@@ -101,8 +101,13 @@ public class DataBaseImpl implements DataBase {
     }
     
     public Optional<String> get_val_from_column_by_name(List<String> keys, String column) {
+        if(names_of_columns.indexOf(column) <0)
+        {
+            return Optional.empty();
+        }
+
         String fileName = new String(names_of_columns.get(0));
-        for(int i = 1; i< (this.getNum_of_keys()-1); i++)
+        for(int i = 1; i< (this.getNum_of_keys()); i++)
         {
             fileName += "_" + names_of_columns.get(i);
         }

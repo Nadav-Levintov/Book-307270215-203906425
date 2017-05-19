@@ -1,10 +1,7 @@
-package il.ac.technion.cs.sd.book.test;
+package db_utils;
 
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +17,7 @@ public class MockLineStorageFactory implements LineStorageFactory {
     @Override
     public LineStorage open(String s) throws IndexOutOfBoundsException {
         List<MockLineStorage> file_list = files.stream()
-                .filter( file -> file.getMockedFileName() == s)
+                .filter( file -> file.getMockedFileName().equals(s))
                 .collect(Collectors.toList());
         MockLineStorage file;
         if(file_list.size() == 0)
