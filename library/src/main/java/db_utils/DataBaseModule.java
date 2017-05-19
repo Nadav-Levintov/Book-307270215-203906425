@@ -13,7 +13,6 @@ public class DataBaseModule  extends AbstractModule {
     }
 
     protected void configure() {
-    //this.bind(DataBase.class).to(DataBaseImpl.class);
     this.bind(DataBaseFactory.class).to(DataBaseFactoryImpl.class);
     }
 }
