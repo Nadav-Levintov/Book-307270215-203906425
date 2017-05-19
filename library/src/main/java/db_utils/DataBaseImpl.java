@@ -98,11 +98,7 @@ public class DataBaseImpl implements DataBase {
         for(Map.Entry<String,String> entry : map.entrySet()) {
             String output = entry.getKey() + entry.getValue();
 
-            // testing   >>>>>>>>>>
-            System.out.println("file name: " + fileName+ "\n"  + " write: " + output + "\n");
-            //          <<<<<<<<<<<
-
-            // lineStorage.appendLine(output);  //TODO: this spouse to be uncomment
+            lineStorage.appendLine(output);
         }
     }
     
