@@ -179,4 +179,22 @@ public class DataBase {
     public Integer getNum_of_keys() {
         return num_of_keys;
     }
+
+    public OptionalInt get_num_of_column(String col_name)
+    {
+        if(!names_of_columns.contains(col_name))
+        {
+            return OptionalInt.empty();
+        }
+
+        Integer index = names_of_columns.indexOf(col_name);
+        if(index<0)
+        {
+            return OptionalInt.empty();
+        }
+        else
+        {
+            return OptionalInt.of(index);
+        }
+    }
 }

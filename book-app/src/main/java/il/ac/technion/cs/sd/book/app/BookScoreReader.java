@@ -10,7 +10,7 @@ import java.util.OptionalDouble;
  */
 public interface BookScoreReader {
   /** Returns true iff reviewer has reviewed the book. If the reviewer or book do not exist, returns false. */
-  boolean gaveReview(String reviewerId, String bookId);
+  boolean gaveReview(String reviewerId, String bookId) throws InterruptedException;
 
   /**
    * Returns the reviewer's review score for the book, if the reviewer reviewed the book.
