@@ -1,6 +1,7 @@
 package il.ac.technion.cs.sd.book.app;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import db_utils.DataBase;
 import db_utils.DataBaseFactory;
@@ -16,9 +17,9 @@ import java.util.stream.Collectors;
 public class BookScoreReaderImpl implements BookScoreReader {
     private final DataBase DB;
 
-    public BookScoreReaderImpl() {
-        Injector injector = Guice.createInjector(new LineStorageModule());
-        DataBaseFactory bdf = injector.getInstance(DataBaseFactory.class);
+    @Inject
+    public BookScoreReaderImpl(DataBaseFactory dataBaseFactory) {
+
         Integer num_of_keys=2;
         List<String> names_of_columns = new ArrayList<>();
         names_of_columns.add("Reviewer");
@@ -27,7 +28,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
 
 
-        DB = bdf.setNames_of_columns(names_of_columns)
+        this.DB = dataBaseFactory.setNames_of_columns(names_of_columns)
                 .setNum_of_keys(num_of_keys)
                 .build();
     }
@@ -37,11 +38,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
     public boolean gaveReview(String reviewerId, String bookId) {
         OptionalInt key_index = DB.get_num_of_column("Reviewer");
         List<String> reviews = null;
-        try {
-            reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
+        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
         Boolean res = reviews.stream()
                                 .anyMatch(line -> line.substring(0,line.indexOf(',')).compareTo(bookId) == 0);
 
@@ -58,11 +55,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
         keys.add(reviewerId);
         keys.add(bookId);
         Optional<String> score=Optional.empty();
-        try {
-            score= DB.get_val_from_column_by_name(keys,"Score");
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
+        score= DB.get_val_from_column_by_name(keys,"Score");
 
         return OptionalDouble.of(Double.parseDouble(score.get()));
 
@@ -73,11 +66,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
     public List<String> getReviewedBooks(String reviewerId) {
         OptionalInt key_index = DB.get_num_of_column("Reviewer");
         List<String> reviews = null;
-        try {
-            reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
+        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
 
         List<String> res=reviews.stream()
                 .map(line -> line.substring(0,line.indexOf(',')))
@@ -93,11 +82,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
         OptionalInt key_index = DB.get_num_of_column("Reviewer");
         List<String> reviews = null;
-        try {
-            reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
+        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
 
         Map<String,Integer> res=reviews.stream()
                 .map(line -> line.split(","))
@@ -110,11 +95,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
     public OptionalDouble getScoreAverageForReviewer(String reviewerId) {
         OptionalInt key_index = DB.get_num_of_column("Reviewer");
         List<String> reviews = null;
-        try {
-            reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
+        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
 
         List<String> res=reviews.stream()
                 .map(line ->  line.split(",")[1] )

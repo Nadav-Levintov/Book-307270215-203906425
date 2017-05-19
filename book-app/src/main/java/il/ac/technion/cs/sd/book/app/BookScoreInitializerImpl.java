@@ -1,6 +1,7 @@
 package il.ac.technion.cs.sd.book.app;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import db_utils.DataBase;
 import db_utils.DataBaseFactory;
@@ -25,6 +26,14 @@ import org.w3c.dom.Node;
  * Created by Nadav on 15-May-17.
  */
 public class BookScoreInitializerImpl implements BookScoreInitializer {
+    private DataBaseFactory dataBaseFactory;
+
+    @Inject
+    public BookScoreInitializerImpl(DataBaseFactory dataBaseFactory) {
+        this.dataBaseFactory = dataBaseFactory;
+    }
+
+
     @Override
     public void setup(String xmlData) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -57,8 +66,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
 
             }
         }
-        Injector injector = Guice.createInjector(new LineStorageModule());
-        DataBaseFactory bdf = injector.getInstance(DataBaseFactory.class);
+
         Integer num_of_keys=2;
         List<String> names_of_columns = new ArrayList<>();
         names_of_columns.add("Reviewer");
@@ -67,7 +75,7 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
 
 
 
-        DataBase DB = bdf.setNames_of_columns(names_of_columns)
+        DataBase DB = dataBaseFactory.setNames_of_columns(names_of_columns)
                 .setNum_of_keys(num_of_keys)
                 .build();
 
