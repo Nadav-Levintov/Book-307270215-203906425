@@ -120,16 +120,56 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public List<String> getReviewers(String bookId) {
-        return null;
+        OptionalInt key_index = DB.get_num_of_column("Book");
+        List<String> reviews = null;
+        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+
+        List<String> res=reviews.stream()
+                .map(line -> line.substring(0,line.indexOf(',')))
+                .sorted()
+                .collect(Collectors.toList());
+
+        return res;
     }
 
     @Override
     public Map<String, Integer> getReviewsForBook(String bookId) {
-        return null;
+
+        OptionalInt key_index = DB.get_num_of_column("Book");
+        List<String> reviews = null;
+        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+
+        Map<String,Integer> res=reviews.stream()
+                .map(line -> line.split(","))
+                .collect(Collectors.toMap(arr -> arr[0],arr -> Integer.parseInt(arr[1])));
+
+        return res;
     }
 
     @Override
     public OptionalDouble getAverageReviewScoreForBook(String bookId) {
-        return null;
+        OptionalInt key_index = DB.get_num_of_column("Book");
+        List<String> reviews = null;
+        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+
+        List<String> res=reviews.stream()
+                .map(line ->  line.split(",")[1] )
+                .collect(Collectors.toList());
+
+        if(res.isEmpty())
+        {
+            return OptionalDouble.empty();
+        }
+
+        Double sum = new Double(0);
+        for (String val: res
+                ) {
+            sum+=Double.parseDouble(val);
+        }
+
+        Double avg = new Double(sum/res.size());
+
+
+        return OptionalDouble.of(avg);
     }
 }
