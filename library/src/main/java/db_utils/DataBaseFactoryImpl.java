@@ -3,6 +3,7 @@ package db_utils;
 import com.google.inject.Inject;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class DataBaseFactoryImpl implements DataBaseFactory {
     private Integer num_of_keys;
-    private List<String> names_of_columns;
+    private ArrayList<String> names_of_columns;
     private final LineStorageFactory lineStorageFactory;
 
     @Inject
@@ -26,7 +27,7 @@ public class DataBaseFactoryImpl implements DataBaseFactory {
         return this;
     }
 
-    public DataBaseFactoryImpl setNames_of_columns(List<String> names_of_columns) {
+    public DataBaseFactoryImpl setNames_of_columns(ArrayList<String> names_of_columns) {
         this.names_of_columns = names_of_columns;
         return this;
     }

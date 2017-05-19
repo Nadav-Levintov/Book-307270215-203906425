@@ -3,6 +3,7 @@ package db_utils;
 
 
 import com.google.inject.Inject;
+import com.sun.deploy.util.StringUtils;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
@@ -14,11 +15,11 @@ public class DataBaseImpl implements DataBase {
 
     private final Integer num_of_columns;
     private final Integer num_of_keys;
-    private final List<String> names_of_columns;
+    private final ArrayList<String> names_of_columns;
     private final LineStorageFactory lineStorageFactory;
 
 
-    public DataBaseImpl(Integer num_of_keys, List<String> names_of_columns, LineStorageFactory lineStorageFactory) {
+    public DataBaseImpl(Integer num_of_keys, ArrayList<String> names_of_columns, LineStorageFactory lineStorageFactory) {
         this.num_of_keys=num_of_keys;
         this.names_of_columns = names_of_columns;
         this.num_of_columns=names_of_columns.size();
@@ -26,44 +27,86 @@ public class DataBaseImpl implements DataBase {
     }
 
     public void build_db(String csv_data){
-        List<Map<String,String>> DB= new ArrayList<>();
-        for (int i=0;i<num_of_keys;i++)
+
+        //String[] lines = csv_data.split("\n");
+        List<String> keyList = new ArrayList<>();
+        ArrayList<Integer> keyIndexList = new ArrayList<>();
+        for(Integer i=0; i<this.num_of_keys; i++)       //create array of index that will make permutations of it
         {
-            DB.add(i,new TreeMap<String,String>());
+            keyIndexList.add(i);
         }
 
+        keyList.addAll(this.names_of_columns.subList(0,num_of_keys));  //create a list of keys names by order
+        Permutations keysPermutation = new Permutations();
+        List<List<Integer>> listOfAllPermutations = new ArrayList<>();
+        listOfAllPermutations.addAll(keysPermutation.perm(keyIndexList));
+
+        //now listOfAllPermutations has all possible permutations
+       for (List<Integer> currentIndexKeyList: listOfAllPermutations)
+        {
+            String fileName = new String(createFileName(keyList ,currentIndexKeyList));
+            write_map_to_new_file(create_file_sorted_by_keys(csv_data, keyList, currentIndexKeyList), fileName);
+        }
+
+
+
+    }
+
+    private String createFileName(List<String> keyList, List<Integer> premutationIndexList)
+    {
+        String fileName = new String();
+        fileName+=keyList.get(premutationIndexList.get(0));
+        for (int index=1; index <keyList.size(); index++)
+        {
+            fileName+= "_" + keyList.get(premutationIndexList.get(index));
+        }
+        return fileName;
+    }
+
+    //function get list of <all> the keys in the order of sorting and will be saved on disk in that order
+    private Map<String,String> create_file_sorted_by_keys(String csv_data, List<String> keys, List<Integer> currentIndexKeyList)
+    {
         String[] lines = csv_data.split("\n");
-        for(String line : lines){
+        TreeMap<String,String> map = new TreeMap<>();
+
+        for(String line : lines)
+        {
             String[] curr_line = line.split(",");
-            //TODO: make generic with permutations
-            String key_1=curr_line[0]+","+curr_line[1];
-            String key_2=curr_line[1]+","+curr_line[0];
+
+            //create key for map
+            String keysString =new String();
+            for (int index=0; index <keys.size(); index++)
+            {
+                keysString+= curr_line[currentIndexKeyList.get(index)]+",";
+            }
+
+            //create value for map
             String value = new String();
             for(int i=num_of_keys;i<num_of_columns-1;i++)
             {
                 value+=curr_line[i]+",";
             }
             value+=curr_line[num_of_columns-1];
-
-            DB.get(0).put(key_1,value);
-            DB.get(1).put(key_2,value);
-
+            map.put(keysString,value);
         }
-
-        for(int i=0; i<num_of_keys;i++)
-        {
-            LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(i));
-            Map<String,String> curr_table = DB.get(i);
-            for(Map.Entry<String,String> entry : curr_table.entrySet())
-            {
-                String output = entry.getKey()+","+entry.getValue();
-                lineStorage.appendLine(output);
-            }
-        }
-
+        return map;
     }
 
+    private void write_map_to_new_file(Map<String,String> map, String fileName)
+    {
+        LineStorage lineStorage = lineStorageFactory.open(fileName);
+        for(Map.Entry<String,String> entry : map.entrySet()) {
+            String output = entry.getKey() + entry.getValue();
 
+            // testing   >>>>>>>>>>
+            System.out.println("file name: " + fileName+ "\n"  + " write: " + output + "\n");
+            //          <<<<<<<<<<<
+
+            // lineStorage.appendLine(output);  //TODO: this spouse to be uncomment
+        }
+    }
+
+    //TODO: change name
     public Optional<String> get_val_from_column_by_name(List<String> keys, String column) {
         LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(0));
         Integer low=0,high;
@@ -99,6 +142,7 @@ public class DataBaseImpl implements DataBase {
         return Optional.empty();
     }
 
+    //TODO: change name...
     public List<String> get_lines_for_key(String key,Integer key_id) {
         List<String> results = new ArrayList<>();
 
@@ -175,6 +219,7 @@ public class DataBaseImpl implements DataBase {
         return results;
     }
 
+    //TODO: Don't understand  how it's spouse to work?
     public Optional<String> get_val_from_column_by_colum_number(List<String> keys, Integer column) {
         if (column< 0  || column > num_of_columns)
         {
@@ -187,6 +232,7 @@ public class DataBaseImpl implements DataBase {
         return num_of_columns;
     }
 
+    //TODO: No good for more than two keys
     public Optional<String> get_line_by_num_and_key(Integer num, String key) throws IllegalArgumentException{
         if(!names_of_columns.contains(key))
         {
