@@ -212,14 +212,6 @@ public class PermutationsTest {
         assertEquals((Integer)(list4res.get(23).get(2)) , (Integer) 2);
         assertEquals((Integer)(list4res.get(23).get(3)) , (Integer) 1);
 
-
-
-
-
-
-
-
-
     }
 
 }

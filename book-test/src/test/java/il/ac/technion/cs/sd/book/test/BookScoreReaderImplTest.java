@@ -238,4 +238,12 @@ public class BookScoreReaderImplTest {
 
     }
 
+
+    @Test
+    public void heavyTest() throws Exception {
+
+        BookScoreReader bookScoreReader = SetupAndBuildBookScoreReader("small.xml");
+
+
+    }
 }
