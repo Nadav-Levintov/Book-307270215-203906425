@@ -255,30 +255,4 @@ public class DataBaseTest {
     }
 
 
-    @Test
-    public void get_line_by_num_and_key_2_keys() throws Exception {
-
-        Integer num_of_keys=2;
-        List<String> names_of_columns = new ArrayList<>();
-        names_of_columns.add("Reviewer");
-        names_of_columns.add("Book");
-        names_of_columns.add("Score");
-
-
-        String csv =    "Nadav,Harry,8\n" +
-                "Nadav,Harry2,3\n"+
-                "Benny,Harry,9\n" +
-                "Benny,Harry,9\n" +
-                "Benny,Bla,8\n";
-
-        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
-
-        assertEquals(Optional.of("Benny,Bla,8"),DB.get_line_by_num_and_key(1,"Reviewer"));
-        //assertEquals(Optional.empty(),DB.get_line_by_num_and_key(keys2,"Score"));
-        //assertEquals(Optional.empty(),DB.get_line_by_num_and_key(keys1,"Bla"));
-
-
-    }
-
-
 }

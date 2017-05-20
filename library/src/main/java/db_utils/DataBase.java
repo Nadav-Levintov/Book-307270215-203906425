@@ -15,8 +15,6 @@ public interface DataBase {
 
     public Optional<String> get_val_from_column_by_column_number(List<String> keys, Integer column);
 
-    public Optional<String> get_line_by_num_and_key(Integer num, String key);
-
     public Integer getNum_of_columns();
 
     public List<String> getNames_of_columns();
