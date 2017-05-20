@@ -50,7 +50,7 @@ public class BookScoreReaderImplTest {
         BookScoreReader bookScoreReader = SetupAndBuildBookScoreReader("small.xml");
 
         assertTrue(bookScoreReader.gaveReview("321","Foobar2"));
-        assertTrue(bookScoreReader.gaveReview("123","Foobar"));
+       assertTrue(bookScoreReader.gaveReview("123","Foobar"));
         assertTrue(bookScoreReader.gaveReview("123","Moobar"));
         assertTrue(bookScoreReader.gaveReview("123","Boobar"));
         assertFalse(bookScoreReader.gaveReview("Nadav","Foobar2"));

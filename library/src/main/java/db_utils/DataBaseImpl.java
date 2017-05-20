@@ -282,8 +282,11 @@ public class DataBaseImpl implements DataBase {
                     curr_key += values[i] + ",";
                 }
                 compare = key.compareTo(curr_key);
-            } while (compare == 0 && index >= 0);
-            index++;
+            } while (compare == 0 && index > 0 );
+            if(compare!=0){
+                index++;
+            }
+
         }
 
         //here it copys all the rows with the right key from the first
