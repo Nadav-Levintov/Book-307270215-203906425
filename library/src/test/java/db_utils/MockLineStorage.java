@@ -4,6 +4,7 @@ import il.ac.technion.cs.sd.book.ext.LineStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Nadav on 19-May-17.
@@ -25,11 +26,21 @@ public class MockLineStorage implements LineStorage {
 
     @Override
     public String read(int i) throws InterruptedException {
+        try {
+            TimeUnit.MILLISECONDS.sleep(mockedFile.get(i).length());
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
         return mockedFile.get(i);
     }
 
     @Override
     public int numberOfLines() throws InterruptedException {
+        try {
+            TimeUnit.MILLISECONDS.sleep(100);
+        } catch (InterruptedException e) {
+            throw new RuntimeException();
+        }
         return mockedFile.size();
     }
 
