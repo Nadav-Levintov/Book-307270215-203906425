@@ -240,24 +240,30 @@ public class DataBaseImpl implements DataBase {
         return num_of_columns;
     }
 
-    public Optional<String> get_line_by_num_and_key(Integer num, String key) throws IllegalArgumentException{
+    public Optional<String> get_line_by_num_and_key(Integer line_num, String key) throws IllegalArgumentException{
         if(!names_of_columns.contains(key))
         {
             return Optional.empty();
         }
 
-        LineStorage lineStorage = lineStorageFactory.open(key);
+        String fileName = key;
+        for(int i = 1; i< (this.getNum_of_keys()); i++)
+        {
+            fileName += "_" + names_of_columns.get(i);
+        }
+
+        LineStorage lineStorage = lineStorageFactory.open(fileName);
 
         try {
-            if(num>lineStorage.numberOfLines() || num<0)
+            if(line_num>lineStorage.numberOfLines() || line_num<0)
             {
-                throw new IllegalArgumentException(Integer.toString(num));
+                throw new IllegalArgumentException(Integer.toString(line_num));
             }
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
         try {
-            return Optional.of(lineStorage.read(num));
+            return Optional.of(lineStorage.read(line_num));
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
