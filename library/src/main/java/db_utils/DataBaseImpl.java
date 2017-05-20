@@ -115,14 +115,16 @@ public class DataBaseImpl implements DataBase {
             fileName += "_" + names_of_columns.get(i);
         }
         LineStorage lineStorage = lineStorageFactory.open(fileName);
-
-        Integer low=0,high;
-        String curr_line;
+        int numberOfLines = 0;
         try {
-            high = lineStorage.numberOfLines()-1;
+            numberOfLines = lineStorage.numberOfLines();
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
+
+        Integer low=0,high;
+        String curr_line;
+        high = numberOfLines -1;
         String key=new String();
         for (String str: keys)
         {
@@ -222,12 +224,14 @@ public class DataBaseImpl implements DataBase {
         Integer low=0,high;
         String curr_line;
         Integer index=0,compare=0;
-
+        int numberOfLines = 0;
         try {
-            high = lineStorage.numberOfLines()-1;
+            numberOfLines = lineStorage.numberOfLines();
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
+
+        high = numberOfLines-1;
         String key=new String();
         for (String str: keysList)
         {
@@ -290,30 +294,26 @@ public class DataBaseImpl implements DataBase {
         }
 
         //here it copys all the rows with the right key from the first
-        try {
-            do {
-                try {
-                    curr_line = lineStorage.read(index);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException();
-                }
-                String[] values = curr_line.split(",");
-                String curr_key = new String();
-                for(int i = 0; i< keysList.size(); i++)
-                {
-                    curr_key += values[i] + ",";
-                }
-                compare = key.compareTo(curr_key);
-                if (compare == 0) {
-                    String output = curr_line.substring(key.length());
-                    results.add(output);
-                }
-                index++;
+        do {
+            try {
+                curr_line = lineStorage.read(index);
+            } catch (InterruptedException e) {
+                throw new RuntimeException();
             }
-            while(compare == 0 && index < lineStorage.numberOfLines());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
+            String[] values = curr_line.split(",");
+            String curr_key = new String();
+            for(int i = 0; i< keysList.size(); i++)
+            {
+                curr_key += values[i] + ",";
+            }
+            compare = key.compareTo(curr_key);
+            if (compare == 0) {
+                String output = curr_line.substring(key.length());
+                results.add(output);
+            }
+            index++;
         }
+        while(compare == 0 && index < numberOfLines);
 
         return results;
 
