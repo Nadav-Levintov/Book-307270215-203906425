@@ -260,5 +260,36 @@ public class DataBaseTest {
         assertEquals(Optional.empty(),DB.get_val_from_column_by_column_number(keys1,4));
     }
 
+    @Test
+    public void get_lines_for_keys_3_keys() throws Exception{
+        Integer num_of_keys=3;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+        names_of_columns.add("Value");
+
+
+        String csv =    "Nadav,Harry,8,a\n" +
+                "Nadav,Harry2,3,b\n"+
+                "Benny,Harry,9,c\n" +
+                "Benny,Harry,9,d\n" +
+                "Benny,Bla,8,e\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+        List<String> values = new ArrayList<>();
+        List<String> keysName = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
+
+        keysName.add("Reviewer");
+        keysName.add("Book");
+        keys.add("Benny");
+        keys.add("Harry");
+        values.addAll(DB.get_lines_for_keys(keysName,keysName));
+
+        assertEquals(values.get(0), "9,c");
+        assertEquals(values.get(1), "9,b");
+
+    }
 
 }
