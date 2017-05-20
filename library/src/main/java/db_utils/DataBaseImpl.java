@@ -99,7 +99,7 @@ public class DataBaseImpl implements DataBase {
             lineStorage.appendLine(output);
         }
     }
-    
+
     public Optional<String> get_val_from_column_by_name(List<String> keys, String column) {
         if(names_of_columns.indexOf(column) <0)
         {
@@ -152,29 +152,60 @@ public class DataBaseImpl implements DataBase {
     }
 
     //TODO: not working
-    public List<String> get_lines_for_key(String key,Integer key_id) {
-        List<String> results = new ArrayList<>();
+    public List<String> get_lines_for_key(ArrayList<String> keysNameList,ArrayList<String> keysIDList)
+    {
+        ArrayList<String> keysNameforFile = new ArrayList<>(keysNameList);
 
-        if(!names_of_columns.contains(key))
+        //TODO: check that all the names in the list are legal and are has one copy only
+        //TODO: check if the length of bouth  lists is equal
+        /*
+                if(!names_of_columns.contains(key))
         {
             return results;
         }
+        */
 
-        LineStorage lineStorage = lineStorageFactory.open(names_of_columns.get(key_id));
+        while(keysNameforFile.size()<(this.num_of_keys-1))//file name is build from all the keys but one
+        {
+            for(int i=0; i < (this.num_of_keys-1); i++)
+            {
+                if(!keysNameforFile.contains(this.names_of_columns.get(i)))
+                {
+                    keysNameforFile.add(names_of_columns.get(i));
+                    break;
+                }
+            }
+        }
+
+        String fileName = new String(keysNameforFile.get(0));
+        for(int i = 1; i< (keysNameforFile.size()); i++)
+        {
+            fileName += "_" + keysNameforFile.get(i);
+        }
+
+        //here file name is legal
+
+        LineStorage lineStorage = lineStorageFactory.open(fileName);
+        List<String> results = new ArrayList<>();
+
         Integer low=0,high;
         String curr_line;
+        Integer index=0,compare=0;
+
         try {
             high = lineStorage.numberOfLines()-1;
         } catch (InterruptedException e) {
             throw new RuntimeException();
         }
+        String key=new String();
+        for (String str: keysIDList)
+        {
+            key+=str+",";
+        }
 
-
-        Integer index=0,compare=0;
-        String[] values;
+        //here have the key to search
 
         while (low <= high) {
-
             Integer mid = low + (high - low) / 2;
             try {
                 curr_line = lineStorage.read(mid);
@@ -182,29 +213,45 @@ public class DataBaseImpl implements DataBase {
                 throw new RuntimeException();
             }
 
-            values = curr_line.split(",");
-            compare=key.compareTo(values[0]);
+            String[] values = curr_line.split(",");
+            String curr_key= new String();
+            for(int i = 0; i< keysIDList.size(); i++)
+            {
+                curr_key += values[i] + ",";
+            }
+
+
+            compare=key.compareTo(curr_key);
             if      (compare < 0) high = mid - 1;
             else if (compare > 0) low = mid + 1;
             else index=mid;
+
         }
 
-        if(low > high) {
+        if(low > high) {        //case is not found return empty list
             return results;
         }
 
+        //here find the first line in file with the right key
         do {
             try {
                 curr_line = lineStorage.read(index);
             } catch (InterruptedException e) {
                 throw new RuntimeException();
             }
-            values = curr_line.split(",");
-            compare = key.compareTo(values[0]);
+            String[] values = curr_line.split(",");
+            String curr_key = new String();
+            for(int i = 0; i< keysIDList.size(); i++)
+            {
+                curr_key += values[i] + ",";
+            }
+            compare = key.compareTo(curr_key);
             index--;
         }while(compare == 0 && index >= 0);
 
         index++;
+
+        //here it copys all the rows with the right key from the first
         try {
             do {
                 try {
@@ -212,13 +259,18 @@ public class DataBaseImpl implements DataBase {
                 } catch (InterruptedException e) {
                     throw new RuntimeException();
                 }
-                values = curr_line.split(",");
-                compare = key.compareTo(values[0]);
-                index++;
+                String[] values = curr_line.split(",");
+                String curr_key = new String();
+                for(int i = 0; i< keysIDList.size(); i++)
+                {
+                    curr_key += values[i] + ",";
+                }
+                compare = key.compareTo(curr_key);
                 if (compare == 0) {
-                    String output = curr_line.substring(curr_line.indexOf(',') + 1);
+                    String output = curr_line.substring(key.length() + 1);
                     results.add(output);
                 }
+                index++;
             }
             while(compare == 0 && index < lineStorage.numberOfLines());
         } catch (InterruptedException e) {
@@ -226,10 +278,12 @@ public class DataBaseImpl implements DataBase {
         }
 
         return results;
+
+
     }
 
     public Optional<String> get_val_from_column_by_column_number(List<String> keys, Integer column) {
-        if (column< 0  || column > num_of_columns)
+        if (column< 0  || column >= num_of_columns)
         {
             return Optional.empty();
         }

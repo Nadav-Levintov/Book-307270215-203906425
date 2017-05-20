@@ -30,7 +30,6 @@ public class BookScoreReaderImpl implements BookScoreReader {
                 .build();
     }
 
-
     @Override
     public boolean gaveReview(String reviewerId, String bookId) {
         OptionalInt key_index = DB.get_num_of_column("Reviewer");
