@@ -252,6 +252,7 @@ public class DataBaseTest {
 
         assertEquals(Optional.of("8"),DB.get_val_from_column_by_column_number(keys1,2));
         assertEquals(Optional.empty(),DB.get_val_from_column_by_column_number(keys2,2));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_column_number(keys2,3));
         assertEquals(Optional.empty(),DB.get_val_from_column_by_column_number(keys1,4));
     }
 
