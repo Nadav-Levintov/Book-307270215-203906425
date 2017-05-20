@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.mock;
-
 /**
  * Created by Nadav on 19-May-17.
  */

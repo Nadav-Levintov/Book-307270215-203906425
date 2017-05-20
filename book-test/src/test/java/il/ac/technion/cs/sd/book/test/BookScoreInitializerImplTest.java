@@ -11,7 +11,6 @@ import org.junit.rules.Timeout;
 import java.io.File;
 import java.util.Scanner;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**

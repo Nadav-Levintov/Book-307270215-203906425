@@ -1,12 +1,11 @@
 package il.ac.technion.cs.sd.book.app;
 
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import db_utils.DataBase;
 import db_utils.DataBaseFactory;
-import il.ac.technion.cs.sd.book.ext.LineStorageModule;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -18,9 +17,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 /**
  * Created by Nadav on 15-May-17.

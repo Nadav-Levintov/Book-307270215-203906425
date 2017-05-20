@@ -1,8 +1,6 @@
 package il.ac.technion.cs.sd.book.test;
 
 import com.google.inject.AbstractModule;
-import db_utils.DataBaseFactory;
-import db_utils.DataBaseFactoryImpl;
 import il.ac.technion.cs.sd.book.app.BookScoreInitializer;
 import il.ac.technion.cs.sd.book.app.BookScoreInitializerImpl;
 import il.ac.technion.cs.sd.book.app.BookScoreReader;

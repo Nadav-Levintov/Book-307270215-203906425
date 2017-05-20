@@ -2,11 +2,7 @@ package il.ac.technion.cs.sd.book.test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import db_utils.DataBase;
-import db_utils.DataBaseFactory;
-import db_utils.DataBaseFactoryImpl;
 import db_utils.DataBaseModule;
-import il.ac.technion.cs.sd.book.app.BookScoreInitializerImpl;
 import il.ac.technion.cs.sd.book.app.BookScoreReader;
 import il.ac.technion.cs.sd.book.app.BookScoreReaderImpl;
 import org.junit.Rule;
@@ -16,7 +12,6 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;

@@ -2,7 +2,6 @@ package il.ac.technion.cs.sd.book.test;
 
 import com.google.inject.AbstractModule;
 import il.ac.technion.cs.sd.book.app.BookScoreInitializer;
-import il.ac.technion.cs.sd.book.app.BookScoreInitializerImpl;
 import il.ac.technion.cs.sd.book.app.BookScoreReader;
 import il.ac.technion.cs.sd.book.app.BookScoreReaderImpl;
 

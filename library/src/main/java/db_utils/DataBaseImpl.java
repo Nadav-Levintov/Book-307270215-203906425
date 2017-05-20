@@ -2,11 +2,8 @@ package db_utils;
 
 
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
-import java.lang.RuntimeException;
 
 import java.util.*;
 

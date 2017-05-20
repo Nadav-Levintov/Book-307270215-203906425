@@ -8,9 +8,6 @@ import il.ac.technion.cs.sd.book.ext.LineStorageModule;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by benny on 19/05/2017.

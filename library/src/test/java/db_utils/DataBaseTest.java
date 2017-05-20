@@ -2,7 +2,6 @@ package db_utils;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
