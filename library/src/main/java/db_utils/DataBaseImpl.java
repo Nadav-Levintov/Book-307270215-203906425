@@ -282,7 +282,7 @@ public class DataBaseImpl implements DataBase {
                     curr_key += values[i] + ",";
                 }
                 compare = key.compareTo(curr_key);
-            } while (compare == 0 && index > 0);
+            } while (compare == 0 && index >= 0);
             index++;
         }
 
