@@ -19,7 +19,9 @@ public class DataBaseImpl implements DataBase {
 
     //Private Functions
 
-    private String createFileNameFromPermutation(List<String> keyList, List<Integer> premutationIndexList) {
+    private String createFileNameFromPermutation(List<String> keyList,
+                                                 List<Integer> premutationIndexList)
+    {
 
         String fileName = new String();
         fileName+=keyList.get(premutationIndexList.get(0));
@@ -30,7 +32,8 @@ public class DataBaseImpl implements DataBase {
         return fileName;
     }
 
-    private void write_map_to_new_file(Map<String,String> map, String fileName) {
+    private void write_map_to_new_file(Map<String,String> map, String fileName)
+    {
 
         LineStorage lineStorage = lineStorageFactory.open(fileName);
         for(Map.Entry<String,String> entry : map.entrySet()) {

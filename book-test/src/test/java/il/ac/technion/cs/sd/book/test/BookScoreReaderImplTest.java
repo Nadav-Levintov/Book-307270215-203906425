@@ -237,13 +237,4 @@ public class BookScoreReaderImplTest {
         assertEquals(OptionalDouble.empty(),bookScoreReader.getAverageReviewScoreForBook("456"));
 
     }
-
-
-    @Test
-    public void heavyTest() throws Exception {
-
-        BookScoreReader bookScoreReader = SetupAndBuildBookScoreReader("small.xml");
-
-
-    }
 }
