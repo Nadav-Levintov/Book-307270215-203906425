@@ -2,6 +2,7 @@ package db_utils;
 
 
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
@@ -151,12 +152,19 @@ public class DataBaseImpl implements DataBase {
         return Optional.empty();
     }
 
-    //TODO: not working
-    public List<String> get_lines_for_key(ArrayList<String> keysNameList,ArrayList<String> keysIDList)
+    private Boolean is_all_all_values_in_src_list_are_in_dst_list(List<Object> srcList,List<Object> dstList )
+    {
+
+
+    }
+
+    public List<String> get_lines_for_key(List<String> keysNameList,List<String> keysList)
     {
         ArrayList<String> keysNameforFile = new ArrayList<>(keysNameList);
 
         //TODO: check that all the names in the list are legal and are has one copy only
+
+
         //TODO: check if the length of bouth  lists is equal
         /*
                 if(!names_of_columns.contains(key))
@@ -198,7 +206,7 @@ public class DataBaseImpl implements DataBase {
             throw new RuntimeException();
         }
         String key=new String();
-        for (String str: keysIDList)
+        for (String str: keysList)
         {
             key+=str+",";
         }
@@ -215,7 +223,7 @@ public class DataBaseImpl implements DataBase {
 
             String[] values = curr_line.split(",");
             String curr_key= new String();
-            for(int i = 0; i< keysIDList.size(); i++)
+            for(int i = 0; i< keysList.size(); i++)
             {
                 curr_key += values[i] + ",";
             }
@@ -241,7 +249,7 @@ public class DataBaseImpl implements DataBase {
             }
             String[] values = curr_line.split(",");
             String curr_key = new String();
-            for(int i = 0; i< keysIDList.size(); i++)
+            for(int i = 0; i< keysList.size(); i++)
             {
                 curr_key += values[i] + ",";
             }
@@ -261,7 +269,7 @@ public class DataBaseImpl implements DataBase {
                 }
                 String[] values = curr_line.split(",");
                 String curr_key = new String();
-                for(int i = 0; i< keysIDList.size(); i++)
+                for(int i = 0; i< keysList.size(); i++)
                 {
                     curr_key += values[i] + ",";
                 }
