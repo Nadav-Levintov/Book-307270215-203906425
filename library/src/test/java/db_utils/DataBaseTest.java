@@ -323,5 +323,118 @@ public class DataBaseTest {
 
     }
 
+    @Test
+    public void get_lines_for_keys_1_keys() throws Exception{
+        Integer num_of_keys=1;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+
+        String csv =    "Harry,8,\n" +
+                "Harry2,4\n"+
+                "Harry,9\n" +
+                "Harry3,8\n" +
+                "Bla5,8\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+        List<String> values = new ArrayList<>();
+        List<String> keysName = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
+
+        keysName.add("Book");
+        keys.add("Harry");
+        values.addAll(DB.get_lines_for_keys(keysName,keys));
+
+        assertEquals(values.get(0), "9");
+
+
+        //check if no such entry found
+        List<String> empty_values = new ArrayList<>();
+        List<String> keys2 = new ArrayList<>();
+        keys2.add("NoSuchKey");
+        empty_values.addAll(DB.get_lines_for_keys(keysName,keys2));
+        assertTrue(empty_values.size()==0);
+
+
+        keys.remove("Harry");
+
+        try{        //check different array size
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+        keysName.remove("Book");
+        keysName.add("NoSuchKeyName");
+        keys.add("Harry");
+        try{        //check that keys name are legal
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+        keysName.remove("NoSuchKey");
+        keysName.add("Book");
+
+
+        try{        //check that there are to meany keys
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+    }
+
+    @Test
+    public void get_lines_for_keys_2_keys() throws Exception{
+        Integer num_of_keys=2;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+
+        String csv =    "Nadav,Harry,8,a\n" +
+                "Nadav,Harry2,3\n"+
+                "Benny,Harry,9\n" +
+                "Benny,Harry,8\n" +
+                "Benny,Bla,8\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+        List<String> values = new ArrayList<>();
+        List<String> keysName = new ArrayList<>();
+        List<String> keys = new ArrayList<>();
+
+        keysName.add("Reviewer");
+        keys.add("Benny");
+        values.addAll(DB.get_lines_for_keys(keysName,keys));
+
+        assertEquals(values.get(0), "Bla,8");
+        assertEquals(values.get(1), "Harry,8");
+
+
+
+        //check if no such entry found
+        List<String> empty_values = new ArrayList<>();
+        List<String> keys2 = new ArrayList<>();
+        keys2.add("NoSuchKey");
+        empty_values.addAll(DB.get_lines_for_keys(keysName,keys2));
+        assertTrue(empty_values.size()==0);
+
+
+        keys.add("Benny");
+
+        try{        //check different array size
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+        keysName.add("NoSuchKeyName");
+        try{        //check that keys name are legal
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+        keysName.remove("NoSuchKey");
+
+        keysName.add("Book");
+
+
+        try{        //check that there are to meany keys
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+    }
+
 
 }
