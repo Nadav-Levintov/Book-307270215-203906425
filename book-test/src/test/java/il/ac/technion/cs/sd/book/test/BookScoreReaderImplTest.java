@@ -49,6 +49,7 @@ public class BookScoreReaderImplTest {
     public void gaveReview() throws Exception {
         BookScoreReader bookScoreReader = SetupAndBuildBookScoreReader("small.xml");
 
+        assertTrue(bookScoreReader.gaveReview("321","Boobar"));
         assertTrue(bookScoreReader.gaveReview("123","Foobar"));
         assertTrue(bookScoreReader.gaveReview("123","Moobar"));
         assertTrue(bookScoreReader.gaveReview("123","Boobar"));
