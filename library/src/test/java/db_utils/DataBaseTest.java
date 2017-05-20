@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Nadav on 19-May-17.
@@ -290,6 +291,35 @@ public class DataBaseTest {
 
         assertEquals(values.get(0), "8,a");
         assertEquals(values.get(1), "9,d");
+
+
+        //check if no such entry found
+        List<String> empty_values = new ArrayList<>();
+        List<String> keys2 = new ArrayList<>();
+        keys2.add("Benny");
+        keys2.add("80 days");
+        empty_values.addAll(DB.get_lines_for_keys(keysName,keys2));
+        assertTrue(empty_values.size()==0);
+
+
+        keys.add("Benny");
+
+        try{        //check different array size
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+
+        keysName.add("NoSuchKey");
+        try{        //check that keys name are legal
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
+        keysName.remove("NoSuchKey");
+
+        keysName.add("Book");
+
+
+        try{        //check that there are to meny keys
+            values.addAll(DB.get_lines_for_keys(keysName,keys));
+        }catch(IllegalArgumentException e){}
 
     }
 

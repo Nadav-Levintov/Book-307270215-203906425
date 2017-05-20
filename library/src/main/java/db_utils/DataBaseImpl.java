@@ -181,6 +181,9 @@ public class DataBaseImpl implements DataBase {
     {
         ArrayList<String> keysNameforFile = new ArrayList<>(keysNameList);
 
+        if(keysNameList.size()!=keysList.size()){
+            throw new IllegalArgumentException();
+        }
        if(!is_all_all_values_in_src_list_are_in_dst_list(keysNameList,this.getNames_of_columns().subList(0,this.num_of_keys)))
         {
             throw new IllegalArgumentException();
@@ -190,6 +193,7 @@ public class DataBaseImpl implements DataBase {
         {
             throw new IllegalArgumentException();
         }
+
 
         while(keysNameforFile.size()<(this.num_of_keys))//file name is build from all the keys but one
         {
