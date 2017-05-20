@@ -32,11 +32,11 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public boolean gaveReview(String reviewerId, String bookId) {
-        OptionalInt key_index = DB.get_num_of_column("Reviewer");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
+        List<String> reviews = getReviews(reviewerId,"Reviewer");
         Boolean res = reviews.stream()
-                                .anyMatch(line -> line.substring(0,line.indexOf(',')).compareTo(bookId) == 0);
+                                .anyMatch(line -> line
+                                        .substring(0,line.indexOf(','))
+                                        .compareTo(bookId) == 0);
 
         return res;
     }
@@ -60,12 +60,11 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public List<String> getReviewedBooks(String reviewerId) {
-        OptionalInt key_index = DB.get_num_of_column("Reviewer");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
+        List<String> reviews = getReviews(reviewerId,"Reviewer");
 
         List<String> res=reviews.stream()
-                .map(line -> line.substring(0,line.indexOf(',')))
+                .map(line -> line
+                        .substring(0,line.indexOf(',')))
                 .sorted()
                 .collect(Collectors.toList());
 
@@ -75,23 +74,20 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public Map<String, Integer> getAllReviewsByReviewer(String reviewerId) {
-
-        OptionalInt key_index = DB.get_num_of_column("Reviewer");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
+        List<String> reviews = getReviews(reviewerId,"Reviewer");
 
         Map<String,Integer> res=reviews.stream()
                 .map(line -> line.split(","))
-                .collect(Collectors.toMap(arr -> arr[0],arr -> Integer.parseInt(arr[1])));
+                .collect(Collectors.toMap(
+                        arr -> arr[0],
+                        arr -> Integer.parseInt(arr[1])));
 
         return res;
     }
 
     @Override
     public OptionalDouble getScoreAverageForReviewer(String reviewerId) {
-        OptionalInt key_index = DB.get_num_of_column("Reviewer");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(reviewerId,key_index.getAsInt());
+        List<String> reviews = getReviews(reviewerId,"Reviewer");
 
         List<String> res=reviews.stream()
                 .map(line ->  line.split(",")[1] )
@@ -116,9 +112,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public List<String> getReviewers(String bookId) {
-        OptionalInt key_index = DB.get_num_of_column("Book");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+        List<String> reviews = getReviews(bookId,"Book");
 
         List<String> res=reviews.stream()
                 .map(line -> line.substring(0,line.indexOf(',')))
@@ -131,9 +125,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
     @Override
     public Map<String, Integer> getReviewsForBook(String bookId) {
 
-        OptionalInt key_index = DB.get_num_of_column("Book");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+        List<String> reviews = getReviews(bookId,"Book");
 
         Map<String,Integer> res=reviews.stream()
                 .map(line -> line.split(","))
@@ -144,9 +136,7 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
     @Override
     public OptionalDouble getAverageReviewScoreForBook(String bookId) {
-        OptionalInt key_index = DB.get_num_of_column("Book");
-        List<String> reviews = null;
-        reviews = DB.get_lines_for_key(bookId,key_index.getAsInt());
+        List<String> reviews = getReviews(bookId,"Book");
 
         List<String> res=reviews.stream()
                 .map(line ->  line.split(",")[1] )
@@ -167,5 +157,15 @@ public class BookScoreReaderImpl implements BookScoreReader {
 
 
         return OptionalDouble.of(avg);
+    }
+
+    private List<String> getReviews(String key,String key_name) {
+        List<String> keys_names= new ArrayList<>();
+        keys_names.add(key_name);
+        List<String> keys= new ArrayList<>();
+        keys.add(key);
+        List<String> reviews = null;
+        reviews = DB.get_lines_for_keys(keys_names,keys);
+        return reviews;
     }
 }
