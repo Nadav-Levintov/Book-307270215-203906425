@@ -256,13 +256,7 @@ public class DataBaseImpl implements DataBase {
         }
 
         Integer index = names_of_columns.indexOf(col_name);
-        if(index<0)
-        {
-            return OptionalInt.empty();
-        }
-        else
-        {
-            return OptionalInt.of(index);
-        }
+        return OptionalInt.of(index);
+
     }
 }

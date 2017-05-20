@@ -56,6 +56,7 @@ public class DataBaseTest {
         assertEquals(OptionalInt.of(0),DB.get_num_of_column("Reviewer"));
         assertEquals(OptionalInt.of(1),DB.get_num_of_column("Book"));
         assertEquals(OptionalInt.of(2),DB.get_num_of_column("Score"));
+        assertEquals(OptionalInt.empty(),DB.get_num_of_column("Bla"));
 
     }
 
