@@ -28,8 +28,8 @@ import static org.junit.Assert.*;
  */
 public class BookScoreReaderImplTest {
 
-    @Rule
-    public Timeout globalTimeout = Timeout.seconds(30);
+    //@Rule
+    //public Timeout globalTimeout = Timeout.seconds(30);
 
     public BookScoreReader SetupAndBuildBookScoreReader(String xml_file) throws IOException, SAXException, ParserConfigurationException {
 

@@ -268,23 +268,23 @@ public class DataBaseImpl implements DataBase {
         }
 
         //here find the first line in file with the right key
-        do {
-            try {
-                curr_line = lineStorage.read(index);
-            } catch (InterruptedException e) {
-                throw new RuntimeException();
-            }
-            index--;
-            String[] values = curr_line.split(",");
-            String curr_key = new String();
-            for(int i = 0; i< keysList.size(); i++)
-            {
-                curr_key += values[i] + ",";
-            }
-            compare = key.compareTo(curr_key);
-        }while(compare == 0 && index > 0);
-
-        index++;
+        if(index>0) {
+            do {
+                index--;
+                try {
+                    curr_line = lineStorage.read(index);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException();
+                }
+                String[] values = curr_line.split(",");
+                String curr_key = new String();
+                for (int i = 0; i < keysList.size(); i++) {
+                    curr_key += values[i] + ",";
+                }
+                compare = key.compareTo(curr_key);
+            } while (compare == 0 && index > 0);
+            index++;
+        }
 
         //here it copys all the rows with the right key from the first
         try {
