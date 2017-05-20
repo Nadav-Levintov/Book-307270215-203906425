@@ -2,9 +2,11 @@ package db_utils;
 
 
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
+import java.lang.RuntimeException;
 
 import java.util.*;
 
@@ -152,26 +154,42 @@ public class DataBaseImpl implements DataBase {
         return Optional.empty();
     }
 
-    private Boolean is_all_all_values_in_src_list_are_in_dst_list(List<Object> srcList,List<Object> dstList )
+    private Boolean is_all_all_values_in_src_list_are_in_dst_list(List<String> srcList,List<String> dstList )
     {
+        for (String src : srcList)
+        {
+            if(!dstList.contains(src))
+                return false;
 
-
+        }
+        return true;
+    }
+    private Boolean check_if_no_duplicates_in_list(List<String> list)
+    {
+        List<String> noDuplicates = new ArrayList<>();
+        for (String str : list)
+        {
+            if(noDuplicates.contains(str))
+                return false;
+            noDuplicates.add(str);
+        }
+        return true;
     }
 
-    public List<String> get_lines_for_key(List<String> keysNameList,List<String> keysList)
+
+    public List<String> get_lines_for_keys(List<String> keysNameList,List<String> keysList)
     {
         ArrayList<String> keysNameforFile = new ArrayList<>(keysNameList);
 
-        //TODO: check that all the names in the list are legal and are has one copy only
-
-
-        //TODO: check if the length of bouth  lists is equal
-        /*
-                if(!names_of_columns.contains(key))
+       if(is_all_all_values_in_src_list_are_in_dst_list(keysNameList,this.getNames_of_columns().subList(0,this.num_of_keys)));
         {
-            return results;
+            throw new IllegalArgumentException();
         }
-        */
+
+        if(check_if_no_duplicates_in_list(keysNameList));
+        {
+            throw new IllegalArgumentException();
+        }
 
         while(keysNameforFile.size()<(this.num_of_keys-1))//file name is build from all the keys but one
         {
