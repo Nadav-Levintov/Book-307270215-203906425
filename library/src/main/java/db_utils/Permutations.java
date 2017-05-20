@@ -18,6 +18,7 @@ public class Permutations {
 
     public List<List<Integer>> perm(List<Integer> mainList)
     {
+        this.listOfAllPermutations.clear();
         ArrayList<Integer> prefix = new ArrayList<>();
         perm_aux(prefix, mainList);
         return this.listOfAllPermutations;
