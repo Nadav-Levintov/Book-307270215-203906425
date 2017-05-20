@@ -181,12 +181,12 @@ public class DataBaseImpl implements DataBase {
     {
         ArrayList<String> keysNameforFile = new ArrayList<>(keysNameList);
 
-       if(is_all_all_values_in_src_list_are_in_dst_list(keysNameList,this.getNames_of_columns().subList(0,this.num_of_keys)));
+       if(is_all_all_values_in_src_list_are_in_dst_list(keysNameList,this.getNames_of_columns().subList(0,this.num_of_keys)))
         {
             throw new IllegalArgumentException();
         }
 
-        if(check_if_no_duplicates_in_list(keysNameList));
+        if(check_if_no_duplicates_in_list(keysNameList))
         {
             throw new IllegalArgumentException();
         }
@@ -203,7 +203,8 @@ public class DataBaseImpl implements DataBase {
             }
         }
 
-        String fileName = new String(keysNameforFile.get(0));
+        String fileName = new String();
+        fileName = keysNameforFile.get(0);
         for(int i = 1; i< (keysNameforFile.size()); i++)
         {
             fileName += "_" + keysNameforFile.get(i);
