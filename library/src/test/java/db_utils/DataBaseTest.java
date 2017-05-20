@@ -31,8 +31,36 @@ public class DataBaseTest {
 
         return DB;
     }
+
     @Test
-    public void build_db() throws Exception {
+    public void build_db_1_key() throws Exception {
+
+        Integer num_of_keys=1;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+
+
+        String csv =    "Nadav,Harry,8\n" +
+                "Nadav,Harry2,3\n"+
+                "Benny,Harry,9\n" +
+                "Benny,Harry,9\n" +
+                "Benny,Bla,8\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+
+        assertEquals(num_of_keys,DB.getNum_of_keys());
+        assertEquals(OptionalInt.of(names_of_columns.size()),OptionalInt.of(DB.getNum_of_columns()));
+        assertEquals(names_of_columns,DB.getNames_of_columns());
+        assertEquals(OptionalInt.of(0),DB.get_num_of_column("Reviewer"));
+        assertEquals(OptionalInt.of(1),DB.get_num_of_column("Book"));
+        assertEquals(OptionalInt.of(2),DB.get_num_of_column("Score"));
+
+    }
+
+    @Test
+    public void build_db_2_keys() throws Exception {
 
         Integer num_of_keys=2;
         List<String> names_of_columns = new ArrayList<>();
@@ -59,7 +87,68 @@ public class DataBaseTest {
     }
 
     @Test
-    public void get_val_from_column_by_name() throws Exception {
+    public void build_db_3_keys() throws Exception {
+
+        Integer num_of_keys=3;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+        names_of_columns.add("col3");
+
+
+        String csv =    "Nadav,Harry,8,a\n" +
+                "Nadav,Harry2,3,b\n"+
+                "Benny,Harry,9,c\n" +
+                "Benny,Harry,9,d\n" +
+                "Benny,Bla,8,e\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+
+        assertEquals(num_of_keys,DB.getNum_of_keys());
+        assertEquals(OptionalInt.of(names_of_columns.size()),OptionalInt.of(DB.getNum_of_columns()));
+        assertEquals(names_of_columns,DB.getNames_of_columns());
+        assertEquals(OptionalInt.of(0),DB.get_num_of_column("Reviewer"));
+        assertEquals(OptionalInt.of(1),DB.get_num_of_column("Book"));
+        assertEquals(OptionalInt.of(2),DB.get_num_of_column("Score"));
+        assertEquals(OptionalInt.of(3),DB.get_num_of_column("col3"));
+        assertEquals(OptionalInt.empty(),DB.get_num_of_column("test"));
+
+    }
+
+    @Test
+    public void get_val_from_column_by_name_1_key() throws Exception {
+
+        Integer num_of_keys=1;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+
+
+        String csv =    "Nadav,Harry,8\n" +
+                "Nadav,Harry2,3\n"+
+                "Benny,Harry,9\n" +
+                "Benny,Harry,9\n" +
+                "Benny,Bla,8\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+        List<String> keys1 = new ArrayList<>();
+        keys1.add("Nadav");
+        List<String> keys2 = new ArrayList<>();
+        keys2.add("Michal");
+        List<String> keys3 = new ArrayList<>();
+        keys3.add("Benny");
+
+        assertEquals(Optional.of("3"),DB.get_val_from_column_by_name(keys1,"Score"));
+        assertEquals(Optional.of("8"),DB.get_val_from_column_by_name(keys3,"Score"));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_name(keys2,"Score"));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_name(keys1,"Bla"));
+
+    }
+
+    @Test
+    public void get_val_from_column_by_name_2_keys() throws Exception {
 
         Integer num_of_keys=2;
         List<String> names_of_columns = new ArrayList<>();
@@ -89,11 +178,54 @@ public class DataBaseTest {
     }
 
     @Test
+    public void get_val_from_column_by_name_3_keys() throws Exception {
+
+        Integer num_of_keys=3;
+        List<String> names_of_columns = new ArrayList<>();
+        names_of_columns.add("Reviewer");
+        names_of_columns.add("Book");
+        names_of_columns.add("Score");
+        names_of_columns.add("Letter");
+
+
+        String csv =    "Nadav,Harry,8,a\n" +
+                "Nadav,Harry2,3,b\n"+
+                "Benny,Harry,9,c\n" +
+                "Benny,Harry,9,d\n" +
+                "Benny,Bla,8,e\n";
+
+        DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
+        List<String> keys1 = new ArrayList<>();
+        keys1.add("Nadav");
+        keys1.add("Harry");
+        keys1.add("8");
+        List<String> keys2 = new ArrayList<>();
+        keys2.add("Nadav");
+        keys2.add("Bible");
+        keys2.add("8");
+        List<String> keys3 = new ArrayList<>();
+        keys3.add("Nadav");
+        keys3.add("Harry2");
+        keys3.add("3");
+        List<String> keys4 = new ArrayList<>();
+        keys4.add("Nadav");
+        keys4.add("Harry2");
+
+
+        assertEquals(Optional.of("a"),DB.get_val_from_column_by_name(keys1,"Letter"));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_name(keys2,"Letter"));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_name(keys1,"Bla"));
+        assertEquals(Optional.empty(),DB.get_val_from_column_by_name(keys4,"Letter"));
+        assertEquals(Optional.of("b"),DB.get_val_from_column_by_name(keys3,"Letter"));
+
+    }
+
+    @Test
     public void get_lines_for_key() throws Exception {
     }
 
     @Test
-    public void get_val_from_column_by_column_number() throws Exception {
+    public void get_val_from_column_by_column_number_2_keys() throws Exception {
 
 
         Integer num_of_keys=2;
