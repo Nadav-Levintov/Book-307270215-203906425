@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
  * Created by Nadav on 15-May-17.
  */
 public class BookScoreInitializerImpl implements BookScoreInitializer {
-    private DataBaseFactory dataBaseFactory;
+    protected DataBaseFactory dataBaseFactory;
 
     @Inject
     public BookScoreInitializerImpl(DataBaseFactory dataBaseFactory) {
