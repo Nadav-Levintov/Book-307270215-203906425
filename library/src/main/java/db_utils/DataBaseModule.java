@@ -9,9 +9,6 @@ import il.ac.technion.cs.sd.book.ext.LineStorageModule;
  * Created by Nadav on 19-May-17.
  */
 public class DataBaseModule  extends AbstractModule {
-    public DataBaseModule() {
-    }
-
     protected void configure() {
     this.bind(DataBaseFactory.class).to(DataBaseFactoryImpl.class);
     }

@@ -3,7 +3,9 @@ package db_utils;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.Timeout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,8 @@ import static org.junit.Assert.assertEquals;
  * Created by Nadav on 19-May-17.
  */
 public class DataBaseTest {
+    @Rule
+    public Timeout globalTimeout = Timeout.seconds(30);
 
     public DataBase SetupAndBuildDataBase(Integer num_of_keys,List<String> names_of_columns,String csv_data)
     {
