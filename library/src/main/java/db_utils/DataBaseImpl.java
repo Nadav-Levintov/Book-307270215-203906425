@@ -52,16 +52,6 @@ public class DataBaseImpl implements DataBase {
         return fileName;
     }
 
-    private Boolean is_all_all_values_in_src_list_are_in_dst_list(List<String> srcList,List<String> dstList ) {
-        for (String src : srcList)
-        {
-            if(!dstList.contains(src))
-                return false;
-
-        }
-        return true;
-    }
-
     private Boolean check_if_no_duplicates_in_list(List<String> list) {
         List<String> noDuplicates = new ArrayList<>();
         for (String str : list)
@@ -147,7 +137,7 @@ public class DataBaseImpl implements DataBase {
         if(keysNameList.size()!=keysList.size()){
             throw new IllegalArgumentException();
         }
-        if(!is_all_all_values_in_src_list_are_in_dst_list(keysNameList,this.getNames_of_columns().subList(0,this.num_of_keys))) {
+        if(!this.getNames_of_columns().subList(0,this.num_of_keys).containsAll(keysNameList)) {
             throw new IllegalArgumentException();
         }
         if(!check_if_no_duplicates_in_list(keysNameList)) {
