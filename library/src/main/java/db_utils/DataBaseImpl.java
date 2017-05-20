@@ -191,9 +191,9 @@ public class DataBaseImpl implements DataBase {
             throw new IllegalArgumentException();
         }
 
-        while(keysNameforFile.size()<(this.num_of_keys-1))//file name is build from all the keys but one
+        while(keysNameforFile.size()<(this.num_of_keys))//file name is build from all the keys but one
         {
-            for(int i=0; i < (this.num_of_keys-1); i++)
+            for(int i=0; i < (this.num_of_keys); i++)
             {
                 if(!keysNameforFile.contains(this.names_of_columns.get(i)))
                 {
@@ -251,7 +251,11 @@ public class DataBaseImpl implements DataBase {
             compare=key.compareTo(curr_key);
             if      (compare < 0) high = mid - 1;
             else if (compare > 0) low = mid + 1;
-            else index=mid;
+            else {
+                    index=mid;
+                     break;
+            }
+
 
         }
 
@@ -266,6 +270,7 @@ public class DataBaseImpl implements DataBase {
             } catch (InterruptedException e) {
                 throw new RuntimeException();
             }
+            index--;
             String[] values = curr_line.split(",");
             String curr_key = new String();
             for(int i = 0; i< keysList.size(); i++)
@@ -273,8 +278,7 @@ public class DataBaseImpl implements DataBase {
                 curr_key += values[i] + ",";
             }
             compare = key.compareTo(curr_key);
-            index--;
-        }while(compare == 0 && index >= 0);
+        }while(compare == 0 && index > 0);
 
         index++;
 
@@ -294,7 +298,7 @@ public class DataBaseImpl implements DataBase {
                 }
                 compare = key.compareTo(curr_key);
                 if (compare == 0) {
-                    String output = curr_line.substring(key.length() + 1);
+                    String output = curr_line.substring(key.length());
                     results.add(output);
                 }
                 index++;
