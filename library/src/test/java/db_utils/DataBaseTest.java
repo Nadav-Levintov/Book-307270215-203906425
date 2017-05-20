@@ -274,6 +274,7 @@ public class DataBaseTest {
                 "Nadav,Harry2,3,b\n"+
                 "Benny,Harry,9,c\n" +
                 "Benny,Harry,9,d\n" +
+                "Benny,Harry,8,a\n" +
                 "Benny,Bla,8,e\n";
 
         DataBase DB = SetupAndBuildDataBase(num_of_keys,names_of_columns,csv);
@@ -287,8 +288,8 @@ public class DataBaseTest {
         keys.add("Harry");
         values.addAll(DB.get_lines_for_keys(keysName,keys));
 
-        assertEquals(values.get(0), "9,d");
-        //assertEquals(values.get(1), "9,b");
+        assertEquals(values.get(0), "8,a");
+        assertEquals(values.get(1), "9,d");
 
     }
 
