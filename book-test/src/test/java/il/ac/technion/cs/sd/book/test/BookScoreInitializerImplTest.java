@@ -23,7 +23,7 @@ public class BookScoreInitializerImplTest {
 
     @Test
     public void setup() throws Exception {
-        Injector injector= Guice.createInjector(new DataBaseModule(),new MockedLineStorageModule(), new BookScoreModule());
+        Injector injector= Guice.createInjector(new DataBaseModule(),new MockedLineStorageModule(), new FakeBookScoreModule());
         BookScoreInitializerImpl imp= injector.getInstance(BookScoreInitializerImpl.class);
 
         String fileContents =
