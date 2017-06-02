@@ -6,10 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -31,7 +28,14 @@ public class DataBaseTest {
                 .setNum_of_keys(num_of_keys)
                 .build();
 
-        DB.build_db(csv_data);
+        String[] lines = csv_data.split("\n");
+        LinkedList<String> data_list = new LinkedList<>();
+        for (String line: lines)
+        {
+            data_list.add(line);
+        }
+
+        DB.build_db(data_list);
 
         return DB;
     }

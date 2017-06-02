@@ -15,7 +15,7 @@ class    BookScoreModule extends AbstractModule {
   @Override
   protected void configure() {
     this.bind(DataBaseFactory.class).to(DataBaseFactoryImpl.class);
-    this.bind(DataBase.class).to(DataBaseImpl.class);
+    //this.bind(DataBase.class).to(DataBaseImpl.class);
     this.bind(BookScoreInitializer.class).to(BookScoreInitializerImpl.class);
     this.bind(BookScoreReader.class).to(BookScoreReaderImpl.class);
 

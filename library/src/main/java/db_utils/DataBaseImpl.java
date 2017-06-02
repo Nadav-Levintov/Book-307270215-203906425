@@ -2,6 +2,7 @@ package db_utils;
 
 
 
+import com.google.common.collect.Multimap;
 import il.ac.technion.cs.sd.book.ext.LineStorage;
 import il.ac.technion.cs.sd.book.ext.LineStorageFactory;
 
@@ -104,12 +105,12 @@ public class DataBaseImpl implements DataBase {
     }
 
     //function get list of <all> the keys in the order of sorting and will be saved on disk in that order
-    private Map<String,String> create_file_sorted_by_keys(String csv_data, List<String> keys, List<Integer> currentIndexKeyList) {
+    private Map<String,String> create_file_sorted_by_keys(LinkedList<String> csv_data, List<String> keys, List<Integer> currentIndexKeyList) {
 
-        String[] lines = csv_data.split("\n");
+       //String[] lines = csv_data.split("\n");
         TreeMap<String,String> map = new TreeMap<>();
 
-        for(String line : lines)
+        for(String line : csv_data)
         {
             String[] curr_line = line.split(",");
 
@@ -199,7 +200,7 @@ public class DataBaseImpl implements DataBase {
         this.lineStorageFactory = lineStorageFactory;
     }
 
-    public void build_db(String csv_data){
+    public void build_db(LinkedList<String> csv_data){
 
         List<String> keyList = new ArrayList<>();
         ArrayList<Integer> keyIndexList = new ArrayList<>();
@@ -215,8 +216,8 @@ public class DataBaseImpl implements DataBase {
         //now listOfAllPermutations has all possible permutations
         for (List<Integer> currentIndexKeyList: listOfAllPermutations)
         {
-            String fileName = new String(createFileNameFromPermutation(keyList ,currentIndexKeyList));
-            write_map_to_new_file(create_file_sorted_by_keys(csv_data, keyList, currentIndexKeyList), fileName);
+            Map<String,String> mapTemp = create_file_sorted_by_keys(csv_data, keyList, currentIndexKeyList);
+            write_map_to_new_file(mapTemp, (createFileNameFromPermutation(keyList ,currentIndexKeyList)));
         }
     }
 

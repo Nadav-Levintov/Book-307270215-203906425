@@ -16,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -38,29 +39,45 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         Document doc = db.parse(is);
         doc.getDocumentElement().normalize();
         String csv_file = new String();
+        LinkedList<String> file_list = new LinkedList<>();
         NodeList nListReviewers = doc.getElementsByTagName("Reviewer");
-        for (int temp = 0; temp < nListReviewers.getLength(); temp++)
+
+        Node nNodeReviewers = nListReviewers.item(0);
+        String csv_key;
+        String csv_value;
+        NodeList nListReviews;
+        Node nNodeReview;
+        Element eElementeviewer;
+        Element eElementReview;
+        Integer lengthInternal;
+
+        Integer length = nListReviewers.getLength();
+        for (int temp = 0; temp < length;)
         {
-            Node nNodeReviewers = nListReviewers.item(temp);
-            String csv_key = new String();
+           // Node nNodeReviewers = nListReviewers.item(temp);
             if (nNodeReviewers.getNodeType() == Node.ELEMENT_NODE)
             {
-                Element eElementeviewer = (Element) nNodeReviewers;
-                csv_key += (eElementeviewer).getAttribute("Id") + ",";
-                NodeList nListReviews = (eElementeviewer).getElementsByTagName("Review");
-                for (int temp2 = 0; temp2 < nListReviews.getLength(); temp2++)
+                temp++;
+                eElementeviewer = (Element) nNodeReviewers;
+                csv_key = (eElementeviewer).getAttribute("Id") + ",";
+                nListReviews = (eElementeviewer).getElementsByTagName("Review");
+                lengthInternal = nListReviews.getLength();
+                nNodeReview = nListReviews.item(0);
+                for (int temp2 = 0; temp2 < lengthInternal;)
                 {
-                    String csv_value = new String();
-                    Node nNodeReview = nListReviews.item(temp2);
+                    csv_value = "";
                     if (nNodeReview.getNodeType() == Node.ELEMENT_NODE){
-                        Element eElementReview = (Element) nNodeReview;
+                        temp2++;
+                        eElementReview = (Element) nNodeReview;
                         csv_value += eElementReview.getElementsByTagName("Id").item(0).getTextContent() + ",";
-                        csv_value += eElementReview.getElementsByTagName("Score").item(0).getTextContent() + "\n";
-                        csv_file += csv_key + csv_value;
+                        csv_value += eElementReview.getElementsByTagName("Score").item(0).getTextContent();
+                        file_list.add(csv_key + csv_value);
                     }
+                    nNodeReview=nNodeReview.getNextSibling();
                 }
 
             }
+            nNodeReviewers = nNodeReviewers.getNextSibling();
         }
 
         Integer num_of_keys=2;
@@ -69,12 +86,10 @@ public class BookScoreInitializerImpl implements BookScoreInitializer {
         names_of_columns.add("Book");
         names_of_columns.add("Score");
 
-
-
         DataBase DB = dataBaseFactory.setNames_of_columns(names_of_columns)
                 .setNum_of_keys(num_of_keys)
                 .build();
 
-        DB.build_db(csv_file);
+        DB.build_db(file_list);
     }
 }

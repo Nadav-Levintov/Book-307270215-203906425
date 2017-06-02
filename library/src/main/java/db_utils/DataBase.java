@@ -7,7 +7,8 @@ import java.util.*;
 
 public interface DataBase {
 
-    public void build_db(String csv_data);
+    //public void build_db(String csv_data);
+    public void build_db(LinkedList<String> csv_data);
 
     public Optional<String> get_val_from_column_by_name(List<String> keys, String column);
 
