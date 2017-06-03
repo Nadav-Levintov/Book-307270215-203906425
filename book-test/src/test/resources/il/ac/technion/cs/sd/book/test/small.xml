@@ -15,4 +15,20 @@
       <Score>5</Score>
     </Review>
   </Reviewer>
+  <Reviewer Id="321">
+    <Review>
+      <Id>Foobar2</Id>
+      <Score>102</Score>
+    </Review>
+    <Review>
+      <Id>Foobar2</Id>
+      <Score>32</Score>
+    </Review>
+  </Reviewer>
+  <Reviewer Id="322">
+    <Review>
+      <Id>Boobar</Id>
+      <Score>5</Score>
+    </Review>
+  </Reviewer>
 </Root>
